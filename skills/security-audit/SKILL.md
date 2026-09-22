@@ -1,13 +1,34 @@
 ---
 name: security-audit
-description: Security guidance and vulnerability review for codebases, APIs, services, CLI tools, libraries, and daemons. Use for security questions, focused reviews, vulnerability research, security audits, or pen tests. Run the complete workflow only for explicit codebase audit or pen-test requests, full/comprehensive/end-to-end reviews, or requested report artifacts.
+description: Evidence-backed security audits and vulnerability review, including coordinated multi-repository audits and verified repairs when the user authorizes fixes. Use for explicit security review, vulnerability investigation, or codebase audit requests; ordinary development and skill installation alone do not start an audit.
 ---
 
 # Security Audit
 
 Find vulnerabilities that violate a real trust boundary, then give owners the source evidence, safe reproduction, priority, and smallest effective fix. This is a defensive, source-first workflow. A candidate without a concrete affected principal, resource, or security outcome is not a confirmed finding.
 
-## Operating modes
+## Workspace maintainer routing
+
+This fork adds a maintainer workflow to Cloudflare's upstream audit. Select it
+when the user asks to audit their existing development workspace, especially
+when the task also authorizes fixes. Read [CODEX-MAINTAINER.md](CODEX-MAINTAINER.md)
+first. For Noctweave projects, also read the conditional
+[NOCTWEAVE-WORKSPACE.md](NOCTWEAVE-WORKSPACE.md) profile. A repository name alone
+does not authorize executing it or changing it; verify ownership context,
+current scope, instructions, and build entry points.
+
+The maintainer reference defines its execution, write ownership, repair, and
+reporting procedure. The source evidence, bounded impact, distinct verdicts,
+and independent verification requirements below remain applicable. Its artifacts
+must identify `workflow: codex-maintainer`; do not claim the upstream six-phase
+workflow or hostile-code isolation was performed when it was not.
+
+For third-party, adversarial, or otherwise untrusted source, use the upstream
+workflow below with all of its execution and artifact isolation requirements.
+Do not select maintainer mode merely to bypass an unavailable sandbox. Installing
+or updating this skill does not itself start either workflow.
+
+## Upstream operating modes
 
 This skill is guidance by default. Loading it does not authorize the complete audit workflow or file creation.
 
@@ -28,9 +49,9 @@ This skill is agent-neutral:
 
 Use equivalent platform capabilities while preserving role, write-isolation, prompt, and independence boundaries.
 
-## Universal execution safety
+## Upstream execution safety
 
-These rules apply in both operating modes. Source inspection is read-only. Run target-controlled builds, tests, processes, browsers, emulators, fuzzers, and fixture processing only inside an OS-enforced sandbox that provides all of these controls:
+These rules apply to both upstream operating modes. Source inspection is read-only. Run target-controlled builds, tests, processes, browsers, emulators, fuzzers, and fixture processing only inside an OS-enforced sandbox that provides all of these controls:
 
 - no external network; use only an isolated loopback namespace when the check needs local client/server traffic;
 - an empty environment populated from an explicit allowlist with safe values, with scratch-local `HOME`, temporary directories, and caches;
@@ -163,7 +184,7 @@ The high/medium discriminator: does the demonstrated result fully defeat an expl
 
 ### Recommend the smallest effective source fix
 
-For each confirmed finding, identify the invariant the code must enforce and the narrowest source change that enforces it at the last trusted decision point. Prefer specific repository-relative changes and regression tests over generic hardening advice. The audit describes fixes; it does not modify target source.
+For each confirmed finding, identify the invariant the code must enforce and the narrowest source change that enforces it at the last trusted decision point. Prefer specific repository-relative changes and regression tests over generic hardening advice. The upstream audit describes fixes without modifying target source. The Codex maintainer workflow may apply narrow repairs when the user authorizes them, following its independent verification procedure.
 
 ## Full audit workflow
 

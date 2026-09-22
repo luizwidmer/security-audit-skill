@@ -1,12 +1,16 @@
-# security-audit
+# security-audit — Codex maintainer fork
+
+A fork of [Cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill), based on upstream revision `c1c8a8c1471069fb0e188eeaff69b8e8db6564a8`. The original MIT license and audit workflow are preserved.
+
+This fork adds [Codex maintainer audits](skills/security-audit/CODEX-MAINTAINER.md) for existing development workspaces and a conditional [Noctweave profile](skills/security-audit/NOCTWEAVE-WORKSPACE.md). It supports multi-repository scope, authorized repairs, native test constraints, and independent verification. Untrusted source retains the upstream sandbox requirements.
 
 A coding-agent skill that turns your agent into a security auditor. It orchestrates isolated agents through reconnaissance, coverage-led hunting, candidate validation, structured output, independent record verification, and target-neutral reporting.
 
-This is the skill that seeded Cloudflare's vulnerability discovery harness, described in [Build your own vulnerability harness](https://blog.cloudflare.com/build-your-own-vulnerability-harness). The harness grew into a multi-stage, fleet-wide system; this skill is the single-repo starting point it evolved from.
+The upstream skill seeded Cloudflare's vulnerability discovery harness, described in [Build your own vulnerability harness](https://blog.cloudflare.com/build-your-own-vulnerability-harness). The harness grew into a multi-stage, fleet-wide system; this skill is the single-repo starting point it evolved from.
 
 ## What it does
 
-The skill runs a structured audit in six phases:
+The upstream workflow runs a structured audit in six phases:
 
 1. **Reconnaissance** -- map architecture, trust boundaries, input surfaces, prior evidence, and deterministic coverage in `architecture.md` and `coverage-ledger.json`.
 2. **Coverage-led hunting** -- assign isolated hunters from ledger units, record their checks, and use coverage critics to find gaps.
@@ -25,6 +29,8 @@ Multiple runs against the same repo are additive. The skill uses prior ledgers a
 
 | File | Purpose |
 |------|---------|
+| `CODEX-MAINTAINER.md` | Workspace scope, execution limits, authorized repair, independent review, and evidence |
+| `NOCTWEAVE-WORKSPACE.md` | Conditional Swift/Xcode, Bun, multi-repo, and protocol-boundary guidance |
 | `SKILL.md` | Setup, core principles, platform terminology, workflow overview, and audit anti-patterns |
 | `RECONNAISSANCE.md` | Phase 1 reconnaissance prompts and synthesis instructions |
 | `HUNTING.md` | Phase 2 orchestration, hunting methodology, and validation rules |
@@ -51,14 +57,14 @@ Multiple runs against the same repo are additive. The skill uses prior ledgers a
 Install the skill with the [Skills CLI](https://skills.sh):
 
 ```bash
-npx skills add https://github.com/cloudflare/security-audit-skill \
+npx skills add https://github.com/luizwidmer/security-audit-skill \
   --skill security-audit
 ```
 
 Use `--global` for a user-level installation:
 
 ```bash
-npx skills add https://github.com/cloudflare/security-audit-skill \
+npx skills add https://github.com/luizwidmer/security-audit-skill \
   --skill security-audit \
   --global
 ```
@@ -81,13 +87,13 @@ find security vulnerabilities in ./src
 do a security review, output to ~/audits/my-project
 ```
 
-The skill activates automatically when the request matches its trigger (security audit, find vulnerabilities, pen-test the code, etc.). A direct codebase audit or pen-test request uses full audit mode. Security questions and focused vulnerability work use guidance mode unless you request report artifacts. In full audit mode, an unspecified output directory defaults to `~/security-audit-skill/<repo-name>/run-<N>`. The workflow writes inside the target repository only when you explicitly select a directory that version control ignores.
+The skill activates automatically when the request matches its trigger (security audit, find vulnerabilities, pen-test the code, etc.). An audit of the user’s existing development workspace uses the maintainer workflow; third-party or adversarial-source audits use the upstream full audit workflow. Security questions and focused vulnerability work use guidance mode unless you request report artifacts. In upstream full audit mode, an unspecified output directory defaults to `~/security-audit-skill/<repo-name>/run-<N>`. The upstream workflow writes inside the target repository only when you explicitly select a directory that version control ignores. Maintainer audits can use an existing ignored evidence area and make source repairs when the task authorizes them.
 
 ## Requirements
 
 - A coding agent with a model that supports tool use and parallel sub-agents
 - Node.js for the zero-dependency findings and coverage-ledger validators
-- An OS-enforced sandbox for target-controlled builds, tests, processes, browsers, emulators, fuzzers, and fixtures. It must disable external networking, use a sanitized allowlisted environment, enforce resource limits, and allow writes only to assigned scratch paths. Without these controls, the workflow keeps the lead as `needs_validation` instead of executing target code.
+- For upstream untrusted-source audits: an OS-enforced sandbox for target-controlled builds, tests, processes, browsers, emulators, fuzzers, and fixtures. It must disable external networking, use a sanitized allowlisted environment, enforce resource limits, and allow writes only to assigned scratch paths. Without these controls, the workflow keeps the lead as `needs_validation` instead of executing target code.
 
 ## Design principles
 
@@ -97,9 +103,9 @@ The skill activates automatically when the request matches its trigger (security
 - **Defense-in-depth gaps are not vulnerabilities.** If Layer A prevents the attack, the absence of Layer B is a hardening note.
 - **Multiple runs improve coverage.** In our test runs, a single run found roughly half of the vulnerabilities that repeated runs found in total.
 
-## Contact
+## Upstream and fork maintenance
 
-Questions, feedback, or comparing notes on AI-driven security tooling: security-ai-research@cloudflare.com
+Report fork-specific issues in this repository. Cloudflare’s upstream security tooling contact is `security-ai-research@cloudflare.com`; this fork is independently maintained and is not endorsed by Cloudflare.
 
 ## License
 
