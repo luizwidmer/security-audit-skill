@@ -45,6 +45,12 @@ permission required. Never probe deployed relays, customer data, external
 accounts, or production endpoints to validate a finding. Do not add dependency
 upgrades merely to get tests running without assessing their scope.
 
+Advisory checks can disclose dependency metadata to an external service. Review
+that destination and data under the platform permission policy. If approval review
+blocks the check, do not redirect it through a workaround: establish authorization
+or low risk, such as byte-for-byte equality with public manifests and lockfiles,
+before a permitted retry. If it remains blocked, report the gap explicitly.
+
 A sandbox denial, missing SDK, code-signing failure, simulator service error,
 Keychain access error, or WebKit renderer failure is an environment result until
 a product defect is demonstrated. Inspect the failure, then either run a safe
